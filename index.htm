@@ -1,20 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Tic-Tac-Toe</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Game</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game">
-        <div id="board"></div>
-        <div id="scoreboard">
-            <div>Player 1: <span id="player1Score">0</span></div>
-            <div>Player 2: <span id="player2Score">0</span></div>
-        </div>
-        <button id="reset">Reset Game</button>
+  <div id="namePopup" class="popup">
+    <div class="popup-content">
+      <h2>Enter Player Names</h2>
+      <input type="text" id="player1NameInput" placeholder="Player 1 Name">
+      <input type="text" id="player2NameInput" placeholder="Player 2 Name">
+      <button id="startGame">Start Game</button>
     </div>
-    <script src="script.js"></script>
+  </div>
+
+  <h1>Board Game</h1>
+  <div class="game-container">
+    <!-- Player 1 Section -->
+    <div id="player1Section" class="player-section">
+      <h3><span id="player1Name">Player 1</span> Score: <span id="player1Score">0</span></h3>
+      <h4>Words Formed:</h4>
+      <div id="player1Words"></div>
+    </div>
+
+    <!-- Board Container -->
+    <div class="board-container">
+      <div id="board" class="board"></div>
+      <div class="info-container">
+        <button id="reset">Reset</button>
+      </div>
+      <div class="info-container">
+        <input type="text" id="letterInput" placeholder="Enter a letter" maxlength="1">
+      </div>
+    </div>
+
+    <!-- Player 2 Section -->
+    <div id="player2Section" class="player-section">
+      <h3><span id="player2Name">Player 2</span> Score: <span id="player2Score">0</span></h3>
+      <h4>Words Formed:</h4>
+      <div id="player2Words"></div>
+    </div>
+  </div>
+
+  <div class="words-container" id="wordsContainer"></div>
+  <div id="winnerMessage" class="hidden">
+    <h2><span id="winnerName"></span> has won the game!</h2>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
