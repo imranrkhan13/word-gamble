@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+  font-family: "Poppins", system-ui;
+  background: linear-gradient(to right, #C6EBC5, #FBF3D5);
     margin: 0;
     padding: 20px;
     display: flex;
@@ -10,12 +11,272 @@ body {
   }
   
   h1 {
-    color: #333;
+    color: #543310;
     text-align: center;
     margin-bottom: 30px;
   }
   
-  .game-container {
+  .game-container {body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.player-section {
+    width: 25%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.player-section:hover {
+    transform: translateY(-5px);
+}
+
+#player1Section {
+    color: #543310;
+    margin-right: 12px;
+    background-color: #F8EDE3;
+        order: 1;
+}
+
+#player2Section {
+  color: #543310;
+  margin-right: 12px;
+  background-color: #F8EDE3;
+  order: 3;
+}
+
+.board-container {
+    order: 2;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board {
+  background: linear-gradient(to right, #C6EBC5, #FBF3D5);
+  margin-right: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 60px);
+    grid-template-rows: repeat(7, 60px);
+    gap: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.cell {
+  width: 56px;
+  height: 55px;
+  background-color: #F8EDE3;
+  display: flex;
+  justify-content: center;
+  margin-left: 3px;
+  align-items: center;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cell:hover {
+    background-color: #FEFAF6;
+    transform: scale(1.05);
+}
+
+.cell:active {
+    transform: scale(0.95);
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    background-color: #9AC8CD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.words-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#winnerMessage {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #2ecc71;
+    color: white;
+    border-radius: 10px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+    display: none;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.popup h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.popup input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#reset {
+  margin-top: 20px;
+  background: #C39898;
+  font-weight: 900;
+}
+
+#letterPopup {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 300px;
+    display: block;
+    position: fixed;
+    left: 50%;
+    width: 83%;
+    top: 49%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(248, 237, 227);
+    padding: 20px;
+    border: 1px solid black;
+    z-index: 1000;
+}
+
+#letterPopup button {
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+    }
+
+    .player-section, .board-container {
+        width: 100%;
+        order: unset;
+        margin-bottom: 20px;
+    }
+
+    .board {
+        grid-template-columns: repeat(7, 40px);
+        grid-template-rows: repeat(7, 40px);
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      background: #F8EDE3;
+      margin: 0px;
+      font-size: 18px;
+    }
+}
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -32,10 +293,12 @@ body {
   
   #player1Section {
     order: 1;
+    width: 88%;
   }
   
   #player2Section {
     order: 3;
+    width: 88%;
   }
   
   .board-container {
@@ -87,10 +350,12 @@ body {
   }
   
   button {
+    margin: 5px;
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: #A87676;
     color: white;
     border: none;
+    font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
@@ -98,7 +363,7 @@ body {
   }
   
   button:hover {
-    background-color: #45a049;
+   background-color: #FFE5CF;
   }
   
   .words-container {
@@ -145,7 +410,7 @@ body {
   
   .popup input {
     display: block;
-    width: 100%;
+    width: 85%;
     margin-bottom: 10px;
   }
   
@@ -159,4 +424,143 @@ body {
       order: unset;
       margin-bottom: 20px;
     }
+    #winnerMessage{
+      width: 57%;
+      top: 37%;
+      left: 16%;
+    }
   }
+  @keyframes fadeInBounce {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) translateY(20px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.05) translateY(-10px);
+    }
+    80% {
+      transform: scale(0.95) translateY(5px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  #winnerMessage {
+    position: fixed;
+    top: 35%;
+    left: 39%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+  }
+  
+  #winnerMessage.visible {
+    display: block;
+    animation: fadeInBounce 0.6s ease-out forwards;
+  }
+  
+  #winnerMessage.hidden {
+    display: none;
+  }
+  
+  #winnerName {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 10px;
+  }
+  
+  #winnerMessage p {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  @keyframes colorChange {
+    0% { color: #4CAF50; }
+    25% { color: #FFC107; }
+    50% { color: #2196F3; }
+    75% { color: #9C27B0; }
+    100% { color: #4CAF50; }
+  }
+  
+  #winnerName {
+    animation: colorChange 4s infinite;
+  }
+
+  @media (max-width: 375px){
+    #winnerMessage{
+      width: 57%;
+      top: 37%;
+      left: 14%;
+    }
+    .board{
+      margin-left: -11px;
+    }
+    .cell{
+
+    }
+  }
+  @media (max-width: 425px){
+    #winnerMessage{
+      width: 57%;
+      top: 37%;
+      left: 14%;
+    }
+  }
+  @media (max-width: 768px){
+    #winnerMessage{
+      width: 57%;
+      top: 37%;
+      left: 19%;
+    }
+  }
+  @media (max-width: 1440px){
+    #winnerMessage{
+      width: 57%;
+      top: 37%;
+      left: 19%;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .board {
+      width: 90%;
+      margin-left: 8px;
+      margin-right: auto;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+  
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px; /* Reduced gap between cells */
+      width: 100%;
+    }
+  
+    .cell {
+      max-width: 72%; /* Adjust the cell width */
+      max-height: 76%; /* Adjust the cell height */
+      font-size: 0.7rem; /* Smaller font size for a better fit */
+      text-align: center;
+    }
+  
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+  }
+  
+
+  
+  
