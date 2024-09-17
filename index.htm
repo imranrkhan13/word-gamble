@@ -17,6 +17,7 @@
   </div>
 
   <h1>Board Game</h1>
+  
   <div class="game-container">
     <!-- Player 1 Section -->
     <div id="player1Section" class="player-section">
@@ -28,12 +29,7 @@
     <!-- Board Container -->
     <div class="board-container">
       <div id="board" class="board"></div>
-      <div class="info-container">
-        <button id="reset">Reset</button>
-      </div>
-      <div class="info-container">
-        <input type="text" id="letterInput" placeholder="Enter a letter" maxlength="1">
-      </div>
+      <button id="reset">Reset Game</button>
     </div>
 
     <!-- Player 2 Section -->
@@ -44,9 +40,8 @@
     </div>
   </div>
 
-  <div class="words-container" id="wordsContainer"></div>
   <div id="winnerMessage" class="hidden">
-    <h2><span id="winnerName"></span> has won the game!</h2>
+    <h2><span id="winnerName"></span></h2>
   </div>
 
   <script src="script.js"></script>
