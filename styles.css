@@ -505,8 +505,8 @@ button:active {
     .board{
       margin-left: -11px;
     }
-    .cell{
-
+    #letterPopup{
+     width: 83%;
     }
   }
   @media (max-width: 425px){
@@ -515,6 +515,9 @@ button:active {
       top: 37%;
       left: 14%;
     }
+    #letterPopup{
+      width: 83%;
+     }
   }
   @media (max-width: 768px){
     #winnerMessage{
@@ -522,6 +525,9 @@ button:active {
       top: 37%;
       left: 19%;
     }
+    #letterPopup{
+      width: 83%;
+     }
   }
   @media (max-width: 1440px){
     #winnerMessage{
@@ -529,16 +535,22 @@ button:active {
       top: 37%;
       left: 19%;
     }
+    #letterPopup{
+      width: 83%;
+     }
   }
 
   @media (max-width: 320px) {
     .board {
-      width: 90%;
-      margin-left: 8px;
-      margin-right: auto;
-      padding: 5px;
-      box-sizing: border-box;
+      width: 92%;
+        margin-left: 8px;
     }
+    #letterPopup{
+      width: 83%;
+     }
+     button{
+
+     }
   
     .grid-container {
       display: grid;
@@ -548,10 +560,9 @@ button:active {
     }
   
     .cell {
-      max-width: 72%; /* Adjust the cell width */
-      max-height: 76%; /* Adjust the cell height */
-      font-size: 0.7rem; /* Smaller font size for a better fit */
-      text-align: center;
+      max-width: 72%;
+        max-height: 76%;
+        text-align: center;
     }
   
     body {
@@ -559,8 +570,52 @@ button:active {
       padding: 0;
       overflow-x: hidden;
     }
+    #player1Section {
+      width: 80%;
+      margin-left: 10px;
+
+    }
+    #player2Section {
+      width: 80%;
+      margin-left: 10px;
+    }
   }
   
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
 
+.cell .letter {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cell .cursor {
+    position: absolute;
+    font-weight: bold;
+    animation: blink 0.7s infinite;
+    display: none;
+}
+
+.cell.selected .cursor {
+    display: inline;
+}
+
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.selected {
+    background-color: #e0e0e0;
+}
   
   
