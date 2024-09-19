@@ -49,20 +49,45 @@ function switchPlayer() {
 }
 
 async function validateWord(word) {
+    // Check if the word is already used
+    if (globalUsedWords.has(word)) {
+        console.log(`Word "${word}" has already been used.`);
+        return false;
+    }
+
+    // Check if the word length is valid (minimum 3 characters)
+    if (word.length < 3) {
+        console.log(`Word "${word}" is too short.`);
+        return false;
+    }
+
+    // Check if the word is made up of repeated letters (e.g., "AAA", "BBBB")
+    if (/^(.)\1+$/.test(word)) {
+        console.log(`Word "${word}" is made up of repeated letters.`);
+        return false;
+    }
+
     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
     try {
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
-            return data[0] && data[0].word === word.toLowerCase();
+            // Check if the dictionary returns the exact word (case-insensitive match)
+            return data[0] && data[0].word.toLowerCase() === word.toLowerCase();
+        } else if (response.status === 404) {
+            console.log(`Word "${word}" not found in the dictionary.`);
+            return false;
         } else {
+            console.error(`Unexpected response from dictionary API for word "${word}":`, response.status);
             return false;
         }
     } catch (error) {
-        console.error('Error validating word:', error);
+        console.error('Error validating word:', word, error);
         return false;
     }
 }
+
+
 
 function createBoard() {
     board.innerHTML = '';
@@ -74,7 +99,6 @@ function createBoard() {
             cell.dataset.col = col;
             cell.addEventListener('click', selectCell);
             
-            // Add a span for the letter and a span for the cursor
             const letterSpan = document.createElement('span');
             letterSpan.classList.add('letter');
             const cursorSpan = document.createElement('span');
@@ -97,16 +121,27 @@ function selectCell(event) {
     selectedCell = event.currentTarget;
     selectedCell.classList.add('selected');
     selectedCell.querySelector('.cursor').style.display = 'inline';
+
+    // Focus on the hidden input field to trigger the mobile keyboard
+    const hiddenInput = document.getElementById('hiddenInput');
+    hiddenInput.focus();
 }
 
-async function handleKeyPress(event) {
+function handleInput(event) {
+    const key = event.target.value.toUpperCase();
+    event.target.value = ''; // Clear the input for the next letter
+    if (/^[A-Z]$/.test(key)) {
+        updateSelectedCell(key);
+    }
+}
+
+async function updateSelectedCell(key) {
     if (!selectedCell) return;
 
-    const key = event.key.toUpperCase();
-    if (/^[A-Z]$/.test(key) && selectedCell.querySelector('.letter').textContent === '') {
-        const row = parseInt(selectedCell.dataset.row);
-        const col = parseInt(selectedCell.dataset.col);
+    const row = parseInt(selectedCell.dataset.row);
+    const col = parseInt(selectedCell.dataset.col);
 
+    if (selectedCell.querySelector('.letter').textContent === '') {
         boardState[row][col] = key;
         selectedCell.querySelector('.letter').textContent = key;
         await checkForWords(row, col, key);
@@ -116,31 +151,14 @@ async function handleKeyPress(event) {
             checkWinCondition();
         }
 
-        // Move selection to the next empty cell
-        moveSelectionToNextEmptyCell();
-    }
-}
+        // Hide the keyboard by blurring the hidden input
+        document.getElementById('hiddenInput').blur();
 
-function moveSelectionToNextEmptyCell() {
-    const cells = Array.from(document.querySelectorAll('.cell'));
-    const currentIndex = cells.indexOf(selectedCell);
-    for (let i = currentIndex + 1; i < cells.length; i++) {
-        if (cells[i].querySelector('.letter').textContent === '') {
-            selectCell({ currentTarget: cells[i] });
-            return;
-        }
+        // Remove selection from the current cell
+        selectedCell.classList.remove('selected');
+        selectedCell.querySelector('.cursor').style.display = 'none';
+        selectedCell = null;
     }
-    // If no empty cell found after the current one, start from the beginning
-    for (let i = 0; i < currentIndex; i++) {
-        if (cells[i].querySelector('.letter').textContent === '') {
-            selectCell({ currentTarget: cells[i] });
-            return;
-        }
-    }
-    // If no empty cells at all, deselect
-    selectedCell.classList.remove('selected');
-    selectedCell.querySelector('.cursor').style.display = 'none';
-    selectedCell = null;
 }
 
 function displayEndMessage(message) {
@@ -170,8 +188,6 @@ function checkWinCondition() {
             message = `It's a draw between ${player1Name} and ${player2Name}!`;
         }
         displayEndMessage(message);
-        
-        document.removeEventListener('keypress', handleKeyPress);
     }
 }
 
@@ -194,8 +210,6 @@ function resetGame() {
     winnerMessage.classList.add('hidden');
 
     namePopup.style.display = 'flex';
-
-    document.addEventListener('keypress', handleKeyPress);
 }
 
 async function checkForWords(row, col, letter) {
@@ -216,7 +230,7 @@ async function checkForWords(row, col, letter) {
         for (let i = 1; i < 7; i++) {
             const r = parseInt(row) - i * direction.r;
             const c = parseInt(col) - i * direction.c;
-            if (r >= 0 && r < 7 && c >= 0 && c < 7 && boardState[r] && boardState[r][c] !== '') {
+            if (r >= 0 && r < 7 && c >= 0 && c < 7 && boardState[r][c] !== '') {
                 leftPart = boardState[r][c] + leftPart;
             } else {
                 break;
@@ -227,7 +241,7 @@ async function checkForWords(row, col, letter) {
         for (let i = 1; i < 7; i++) {
             const r = parseInt(row) + i * direction.r;
             const c = parseInt(col) + i * direction.c;
-            if (r >= 0 && r < 7 && c >= 0 && c < 7 && boardState[r] && boardState[r][c] !== '') {
+            if (r >= 0 && r < 7 && c >= 0 && c < 7 && boardState[r][c] !== '') {
                 rightPart += boardState[r][c];
             } else {
                 break;
@@ -240,9 +254,11 @@ async function checkForWords(row, col, letter) {
         for (let i = 0; i < word.length - 2; i++) {
             for (let j = i + 3; j <= word.length; j++) {
                 const subword = word.slice(i, j);
-                if (await validateWord(subword) && !newWords.includes(subword) && !globalUsedWords.has(subword)) {
+
+                // Validate the word
+                if (await validateWord(subword)) {
                     newWords.push(subword);
-                    globalUsedWords.add(subword);
+                    globalUsedWords.add(subword);  // Mark the word as globally used
                     totalNewLetters += subword.length;
                 }
             }
@@ -273,6 +289,6 @@ function updateWordsDisplay(wordsElement, wordsArray) {
 }
 
 resetButton.addEventListener('click', resetGame);
-document.addEventListener('keypress', handleKeyPress);
+document.getElementById('hiddenInput').addEventListener('input', handleInput);
 
 namePopup.style.display = 'flex';
