@@ -12,6 +12,8 @@ const namePopup = document.getElementById('namePopup');
 const player1NameInput = document.getElementById('player1NameInput');
 const player2NameInput = document.getElementById('player2NameInput');
 const startGameButton = document.getElementById('startGame');
+const rulesPopup = document.getElementById('rulePopup'); // Updated class name
+const gotItButton = document.getElementById('gotItButton');
 
 let boardState = Array(7).fill().map(() => Array(7).fill(''));
 let currentPlayer = 'Player 1';
@@ -22,6 +24,27 @@ let player2Words = [];
 let globalUsedWords = new Set();
 let selectedCell = null;
 
+function showPopup(popup) {
+  popup.style.display = 'flex';
+}
+
+function hidePopup(popup) {
+  popup.style.display = 'none';
+}
+
+// Show the rules popup when the page loads
+window.addEventListener('load', () => {
+  showPopup(rulesPopup);
+  hidePopup(namePopup); // Ensure name popup is hidden initially
+});
+
+// When "Got It" is clicked, hide rules and show name popup
+gotItButton.addEventListener('click', () => {
+  hidePopup(rulesPopup);
+  showPopup(namePopup);
+});
+
+// Modify the existing startGame function
 function startGame() {
     const player1Name = player1NameInput.value.trim();
     const player2Name = player2NameInput.value.trim();
@@ -34,7 +57,7 @@ function startGame() {
     player1NameEl.textContent = player1Name;
     player2NameEl.textContent = player2Name;
 
-    namePopup.style.display = 'none';
+    hidePopup(namePopup);
     createBoard();
 }
 
@@ -113,26 +136,14 @@ function createBoard() {
     }
 }
 
-function selectCell(event) {
-    if (selectedCell) {
-        selectedCell.classList.remove('selected');
-        selectedCell.querySelector('.cursor').style.display = 'none';
-    }
-    selectedCell = event.currentTarget;
-    selectedCell.classList.add('selected');
-    selectedCell.querySelector('.cursor').style.display = 'inline';
-
-    // Focus on the hidden input field to trigger the mobile keyboard
-    const hiddenInput = document.getElementById('hiddenInput');
-    hiddenInput.focus();
-}
-
 function handleInput(event) {
     const key = event.target.value.toUpperCase();
     event.target.value = ''; // Clear the input for the next letter
     if (/^[A-Z]$/.test(key)) {
         updateSelectedCell(key);
     }
+    // Keep focus on the hidden input
+    event.target.focus();
 }
 
 async function updateSelectedCell(key) {
@@ -151,14 +162,48 @@ async function updateSelectedCell(key) {
             checkWinCondition();
         }
 
-        // Hide the keyboard by blurring the hidden input
-        document.getElementById('hiddenInput').blur();
-
         // Remove selection from the current cell
         selectedCell.classList.remove('selected');
         selectedCell.querySelector('.cursor').style.display = 'none';
-        selectedCell = null;
+        
+        // Find the next empty cell and select it
+        const nextEmptyCell = findNextEmptyCell(row, col);
+        if (nextEmptyCell) {
+            selectCell({ currentTarget: nextEmptyCell });
+        } else {
+            selectedCell = null;
+        }
     }
+}
+
+function findNextEmptyCell(currentRow, currentCol) {
+    for (let col = currentCol + 1; col < 7; col++) {
+        if (boardState[currentRow][col] === '') {
+            return document.querySelector(`[data-row="${currentRow}"][data-col="${col}"]`);
+        }
+    }
+    for (let row = currentRow + 1; row < 7; row++) {
+        for (let col = 0; col < 7; col++) {
+            if (boardState[row][col] === '') {
+                return document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            }
+        }
+    }
+    return null; // No empty cells found
+}
+
+function selectCell(event) {
+    if (selectedCell) {
+        selectedCell.classList.remove('selected');
+        selectedCell.querySelector('.cursor').style.display = 'none';
+    }
+    selectedCell = event.currentTarget;
+    selectedCell.classList.add('selected');
+    selectedCell.querySelector('.cursor').style.display = 'inline';
+
+    // Focus on the hidden input field to trigger the mobile keyboard
+    const hiddenInput = document.getElementById('hiddenInput');
+    hiddenInput.focus();
 }
 
 function displayEndMessage(message) {
@@ -291,4 +336,4 @@ function updateWordsDisplay(wordsElement, wordsArray) {
 resetButton.addEventListener('click', resetGame);
 document.getElementById('hiddenInput').addEventListener('input', handleInput);
 
-namePopup.style.display = 'flex';
+// namePopup.style.display = 'flex';
