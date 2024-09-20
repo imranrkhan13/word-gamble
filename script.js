@@ -136,14 +136,26 @@ function createBoard() {
     }
 }
 
+function selectCell(event) {
+    if (selectedCell) {
+        selectedCell.classList.remove('selected');
+        selectedCell.querySelector('.cursor').style.display = 'none';
+    }
+    selectedCell = event.currentTarget;
+    selectedCell.classList.add('selected');
+    selectedCell.querySelector('.cursor').style.display = 'inline';
+
+    // Focus on the hidden input field to trigger the mobile keyboard
+    const hiddenInput = document.getElementById('hiddenInput');
+    hiddenInput.focus();
+}
+
 function handleInput(event) {
     const key = event.target.value.toUpperCase();
     event.target.value = ''; // Clear the input for the next letter
     if (/^[A-Z]$/.test(key)) {
         updateSelectedCell(key);
     }
-    // Keep focus on the hidden input
-    event.target.focus();
 }
 
 async function updateSelectedCell(key) {
@@ -162,48 +174,14 @@ async function updateSelectedCell(key) {
             checkWinCondition();
         }
 
+        // Hide the keyboard by blurring the hidden input
+        document.getElementById('hiddenInput').blur();
+
         // Remove selection from the current cell
         selectedCell.classList.remove('selected');
         selectedCell.querySelector('.cursor').style.display = 'none';
-        
-        // Find the next empty cell and select it
-        const nextEmptyCell = findNextEmptyCell(row, col);
-        if (nextEmptyCell) {
-            selectCell({ currentTarget: nextEmptyCell });
-        } else {
-            selectedCell = null;
-        }
+        selectedCell = null;
     }
-}
-
-function findNextEmptyCell(currentRow, currentCol) {
-    for (let col = currentCol + 1; col < 7; col++) {
-        if (boardState[currentRow][col] === '') {
-            return document.querySelector(`[data-row="${currentRow}"][data-col="${col}"]`);
-        }
-    }
-    for (let row = currentRow + 1; row < 7; row++) {
-        for (let col = 0; col < 7; col++) {
-            if (boardState[row][col] === '') {
-                return document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-            }
-        }
-    }
-    return null; // No empty cells found
-}
-
-function selectCell(event) {
-    if (selectedCell) {
-        selectedCell.classList.remove('selected');
-        selectedCell.querySelector('.cursor').style.display = 'none';
-    }
-    selectedCell = event.currentTarget;
-    selectedCell.classList.add('selected');
-    selectedCell.querySelector('.cursor').style.display = 'inline';
-
-    // Focus on the hidden input field to trigger the mobile keyboard
-    const hiddenInput = document.getElementById('hiddenInput');
-    hiddenInput.focus();
 }
 
 function displayEndMessage(message) {
