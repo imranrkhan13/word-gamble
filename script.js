@@ -174,8 +174,9 @@ async function updateSelectedCell(key) {
             checkWinCondition();
         }
 
-        // Hide the keyboard by blurring the hidden input
-        document.getElementById('hiddenInput').blur();
+        // Keep the hidden input focused for continuous typing
+        const hiddenInput = document.getElementById('hiddenInput');
+        hiddenInput.focus();  // Remove the blur statement
 
         // Remove selection from the current cell
         selectedCell.classList.remove('selected');
@@ -183,6 +184,7 @@ async function updateSelectedCell(key) {
         selectedCell = null;
     }
 }
+
 
 function displayEndMessage(message) {
     const winnerMessage = document.getElementById('winnerMessage');
