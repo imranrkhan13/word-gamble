@@ -12,7 +12,7 @@ const namePopup = document.getElementById('namePopup');
 const player1NameInput = document.getElementById('player1NameInput');
 const player2NameInput = document.getElementById('player2NameInput');
 const startGameButton = document.getElementById('startGame');
-const rulesPopup = document.getElementById('rulePopup'); // Updated class name
+const rulesPopup = document.getElementById('rulesPopup'); // Updated to match the HTML
 const gotItButton = document.getElementById('gotItButton');
 
 let boardState = Array(7).fill().map(() => Array(7).fill(''));
@@ -31,6 +31,18 @@ function showPopup(popup) {
 function hidePopup(popup) {
   popup.style.display = 'none';
 }
+
+// Show the rules popup when the page loads
+window.addEventListener('load', () => {
+  showPopup(rulesPopup);
+  hidePopup(namePopup); // Ensure name popup is hidden initially
+});
+
+// When "Got It" is clicked, hide rules and show name popup
+gotItButton.addEventListener('click', () => {
+  hidePopup(rulesPopup);
+  showPopup(namePopup);
+});
 
 // Show the rules popup when the page loads
 window.addEventListener('load', () => {
